@@ -40,7 +40,7 @@ exports.version = helpers.getFunctions().https.onRequest(async (req: Request, re
     //only retrieve models modified after the timestamp
     const oldTimestamp = firestore.Timestamp.fromMillis(req.query.timestamp);
     const allEventsPromise = helpers.filterTimestamp(db.collection(DB.COLLECTION_EVENTS), oldTimestamp).get();
-    const allCategoriesPromise = helpers.filterTimestamp(db.collection(DB.COLLECTION_EVENTS), oldTimestamp).get();
+    const allCategoriesPromise = helpers.filterTimestamp(db.collection(DB.COLLECTION_CATEGORIES), oldTimestamp).get();
 
     Promise.all([allEventsPromise, allCategoriesPromise])
         .then((eventsAndCategories) => {

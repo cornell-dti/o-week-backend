@@ -64,4 +64,4 @@ node_modules/
 # dotenv environment variables file
 .env
 
-oweek-1496849141291-firebase-adminsdk-*.json
+pk.json

@@ -35,7 +35,7 @@ export default class helpers {
             if (model.data()[DB.FIELD_DELETED])
                 deleted.push(model.id);
             else
-                changed.push(model.data());
+                changed.push({pk: model.id, ...model.data()});
         }
 
         return {changed, deleted};
