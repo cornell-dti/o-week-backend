@@ -1,6 +1,5 @@
 import {Request, Response} from "firebase-functions";
 import * as functions from "firebase-functions";
-import {firestore} from "firebase-admin";
 import * as admin from "firebase-admin";
 import DB from "./db_const";
 import helpers from "./helpers";
@@ -38,7 +37,8 @@ exports.getResources = helpers.getFunctions().https.onRequest(async (req: Reques
  */
 exports.version = helpers.getFunctions().https.onRequest(async (req: Request, res: Response) => {
     //only retrieve models modified after the timestamp
-    const oldTimestamp = firestore.Timestamp.fromMillis(req.query.timestamp);
+    const oldTimestamp: number = parseInt(req.query.timestamp);
+    // const allEventsPromise = helpers.filterTimestamp(db.collection(DB.COLLECTION_EVENTS), oldTimestamp).get();
     const allEventsPromise = helpers.filterTimestamp(db.collection(DB.COLLECTION_EVENTS), oldTimestamp).get();
     const allCategoriesPromise = helpers.filterTimestamp(db.collection(DB.COLLECTION_CATEGORIES), oldTimestamp).get();
 
@@ -46,11 +46,12 @@ exports.version = helpers.getFunctions().https.onRequest(async (req: Request, re
         .then((eventsAndCategories) => {
             const allEvents = eventsAndCategories[0];
             const allCategories = eventsAndCategories[1];
+            console.log(`Num old events: ${allEvents.size}`);
             //separate into deleted and changed
             const events = helpers.splitChangedDeleted(allEvents);
             const categories = helpers.splitChangedDeleted(allCategories);
 
-            const timestamp = firestore.Timestamp.now();
+            const timestamp = Date.now();
 
             res.send({events, categories, timestamp});
         })

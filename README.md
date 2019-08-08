@@ -41,9 +41,10 @@ npm run deploy
 Any changes made to code is now in production.
 
 #### Running scripts
+Inside functions:
 ```bash
 npm run build
-node functions/lib/scripts/<your script file>.js
+node lib/src/scripts/<your script file>.js
 ```
 
 ## Documentation
@@ -83,7 +84,8 @@ Event object returned by the [Version API](#version).
     "description":"Welcome transfer students! Welcome exchange students!",
     "additional":"## Meet your OL at one of the following locations ## ____ Architecture, Art, and Planning # Lobby, Goldwin Smith Hall ____ Arts and Sciences # 165 McGraw Hall",
     "location":"Locations In Additional Information",
-    "place_ID":"ChIJndqRYRqC0IkR9J8bgk3mDvU",
+    "longitude":-76.484202,
+    "latitude": 42.446744,
     "start":{  
         "_seconds":1534550400,
         "_nanoseconds":0
@@ -92,20 +94,21 @@ Event object returned by the [Version API](#version).
         "_seconds":1534555800,
         "_nanoseconds":0
     },
-    "timestamp":{  
-        "_seconds":1560571200,
-        "_nanoseconds":0
-    },
+    "timestamp": 1565229389461,
     "required":false,
     "category":14,
-    "categoryRequired":true
+    "categories":["3D5B7DBF-0E01-B030-7415609B58D7A9BD"]
 }
 ```
 
 **pk**: The private key, a unique identifier of the event.
-**category**: The pk of the category this event belongs to.
+
+**categories**: The pk of the categories this event belongs to.
+
 **start/end**: The time when this event begins/ends.
-**categoryRequired**: True if this event is required by its category. For example, the event above is not required for all, but for transfer students, and the event is in the transfer students category.
+
+**categoryRequired**: True if this event is required by one of its categories. For example, the event above is not required for all, but for transfer students, and the event is in the transfer students category.
+
 **additional**: Additional information to display in a special format. Formatted like so: `## HEADER ## ____BULLET # INFO ____BULLET # INFO`. The chunks are `## HEADER ##`, `____BULLET`, and `# INFO`.
 
 
@@ -115,12 +118,9 @@ Category object returned by the [Version API](#version).
 ##### Format
 ```json
 {  
-    "pk":"14",
+    "pk":"3D5B7DBF-0E01-B030-7415609B58D7A9BD",
     "category":"Transfer Students",
-    "timestamp":{  
-        "_seconds":1560571200,
-        "_nanoseconds":0
-    }
+    "timestamp": 1565229389461
 }
 ```
 **pk**: The private key, a unique identifier of the category.

@@ -19,7 +19,7 @@ export default class helpers {
      * @param collection Database to filter
      * @param timeStamp Timestamp of last updated database
      */
-    static filterTimestamp(collection: firestore.CollectionReference, timeStamp: firestore.Timestamp): firestore.Query {
+    static filterTimestamp(collection: firestore.CollectionReference, timeStamp: number): firestore.Query {
         return collection.where(DB.FIELD_TIMESTAMP, ">", timeStamp);
     }
 
