@@ -37,21 +37,21 @@
  * }
  */
 
-import familyOrientation from "../../download.json";
+import familyOrientation from "../../family.json";
 import {Event} from "../models/event";
 import {Category, Colleges, StudentTypes} from "../models/category";
 import * as util from "util";
-import {firestore} from "firebase-admin";
 import * as fs from "fs";
 
-const TIMEZONE = " EST";
+const TIMEZONE = " GMT-04:00"; //daylight savings time
 const timestamp: number = Date.now();
 
 const events: Event[] = [];
 const categories: Map<String, Category> = new Map<String, Category>();
 
 for (const jsonEvent of familyOrientation.EVENTS) {
-    const title = jsonEvent.EVENT_TITLE;
+    const title = jsonEvent.EVENT_TITLE.replace(" [Required]", "")
+        .replace(/[‘’]/g,''); // remove smart quotes
     const description = jsonEvent.EVENT_DESCRIPTION;
     const location = jsonEvent.EVENT_LOCATION;
     const latitude: number = util.isNumber(jsonEvent.EVENT_LOCATION_LAT)
@@ -62,6 +62,7 @@ for (const jsonEvent of familyOrientation.EVENTS) {
     const id = jsonEvent.EVENT_ID;
 
     // convert categories
+    let transfer = false;
     let someoneRequires = false;
     const tags: string[] = [];
     const tagStrings: string[] = [];
@@ -73,6 +74,8 @@ for (const jsonEvent of familyOrientation.EVENTS) {
         };
         if (category.category === "Required")
             someoneRequires = true;
+        else if (category.category === StudentTypes.Transfer)
+            transfer = true;
         categories.set(tag.TAG_LABEL, category);
         tags.push(tag.TAG_ID);
         tagStrings.push(tag.TAG_LABEL);
@@ -93,18 +96,18 @@ for (const jsonEvent of familyOrientation.EVENTS) {
     }
 
     // convert events
-    for (const time of jsonEvent.EVENT_TIMES) {
+    for (const [i, time] of jsonEvent.EVENT_TIMES.entries()) {
         const overriddenLocation: string = time.TIME_LOCATION_OVERRIDE === ""
             ? location : time.TIME_LOCATION_OVERRIDE;
         const overriddenLatitude: number = util.isNumber(time.TIME_LOCATION_OVERRIDE_LAT)
             ? time.TIME_LOCATION_OVERRIDE_LAT : latitude;
         const overriddenLongitude: number = util.isNumber(time.TIME_LOCATION_OVERRIDE_LON)
             ? time.TIME_LOCATION_OVERRIDE_LON : longitude;
-        const start = firestore.Timestamp.fromDate(new Date(time.TIME_START + TIMEZONE));
-        const end = firestore.Timestamp.fromDate(new Date(time.TIME_END + TIMEZONE));
+        const start = new Date(time.TIME_START + TIMEZONE).getTime();
+        const end = new Date(time.TIME_END + TIMEZONE).getTime();
 
         const event: Event = {
-            pk: id,
+            pk: id + i,
             name: title,
             description: description,
             additional: "",
@@ -114,12 +117,15 @@ for (const jsonEvent of familyOrientation.EVENTS) {
             longitude: overriddenLongitude,
             start: start,
             end: end,
+            transfer: transfer,
             categories: tags,
             required: required,
             categoryRequired: categoryRequired,
             timestamp: timestamp
         };
         events.push(event);
+
+        console.log(`Created event: ${title}, start: ${start}`);
     }
 }
 

@@ -1,5 +1,3 @@
-import {firestore} from "firebase-admin";
-
 interface Event {
     pk: string,
     name: string,
@@ -9,9 +7,10 @@ interface Event {
     location: string,
     longitude: number,
     latitude: number,
-    start: firestore.Timestamp,
-    end: firestore.Timestamp,
+    start: number,
+    end: number,
     timestamp: number,
+    transfer: boolean,
     required: boolean,
     categories: string[],
     categoryRequired: boolean

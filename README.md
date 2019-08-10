@@ -73,31 +73,34 @@ list of pks but instead a list of event objects in jSON form.
 **categories** is similar to events but for category objects.
 
 
-#### Event
+### Event
 Event object returned by the [Version API](#version).
 
 ##### Format
 ```json
 {  
-    "pk":"U0GZ3ES0A1auNIxDscoY",
-    "name":"Transfer and Exchange Students Orientation Leader Meeting #1",
-    "description":"Welcome transfer students! Welcome exchange students!",
-    "additional":"## Meet your OL at one of the following locations ## ____ Architecture, Art, and Planning # Lobby, Goldwin Smith Hall ____ Arts and Sciences # 165 McGraw Hall",
-    "location":"Locations In Additional Information",
-    "longitude":-76.484202,
-    "latitude": 42.446744,
-    "start":{  
-        "_seconds":1534550400,
-        "_nanoseconds":0
-    },
-    "end":{  
-        "_seconds":1534555800,
-        "_nanoseconds":0
-    },
-    "timestamp": 1565229389461,
+    "pk":"6515E88A-A28E-610A-8A6E4DD8461A5ABF0",
+    "name":"Africana Library Open House",
+    "description":"The John Henrik Clarke Africana Library provides a special collection focusing on the history and culture of people of African ancestry. The library supports the curriculum of Cornell University’s Africana Studies and Research Center and the Cornell community at large. The library was named in honor of Dr. John Henrik Clarke during the summer of 1985. As a distinguished historian, Dr. Clarke taught courses in Black history at Cornell and was instrumental in establishing the Africana Center’s curriculum in the 1970s. The fall of 2019 marks the 50th anniversary of the founding of Africana. Come and take a tour of the library and the center, and see salient works from our collection.",
+    "additional":"",
+    "url":"https://africana.library.cornell.edu/",
+    "location":"Africana Studies and Research Center, 310 Triphammer Road",
+    "latitude":42.4574290881,
+    "longitude":-76.4823330605,
+    "start":1566572400000,
+    "end":1566583200000,
+    "transfer":false,
+    "categories":[  
+        "3D56A772-CEE7-2FAC-D320EC9F9BDA6E77",
+        "3D5A35CF-9CF4-6F1D-20B4C097C26FFEFF",
+        "3D5B7DBF-0E01-B030-7415609B58D7A9BD",
+        "3D6F166E-9214-DA5D-A34F1B2210D0E798",
+        "3D71C261-05B8-12D9-978ED31A5A5510B7",
+        "BAEFD405-B017-6569-6F8E61533D4F3831"
+    ],
     "required":false,
-    "category":14,
-    "categories":["3D5B7DBF-0E01-B030-7415609B58D7A9BD"]
+    "categoryRequired":false,
+    "timestamp":1565469385536
 }
 ```
 
@@ -105,11 +108,13 @@ Event object returned by the [Version API](#version).
 
 **categories**: The pk of the categories this event belongs to.
 
-**start/end**: The time when this event begins/ends.
+**start/end**: The epoch time when this event begins/ends. In EST daylight saving time.
 
-**categoryRequired**: True if this event is required by one of its categories. For example, the event above is not required for all, but for transfer students, and the event is in the transfer students category.
+**transfer**: True if the event is for transfer students. Used to distinguish whether the event is required for all students of a college or just transfers of that college.
 
-**additional**: Additional information to display in a special format. Formatted like so: `## HEADER ## ____BULLET # INFO ____BULLET # INFO`. The chunks are `## HEADER ##`, `____BULLET`, and `# INFO`.
+**categoryRequired**: True if this event is required for students in a college or transfer students (in a college).
+
+**additional** (Deprecated): Additional information to display in a special format. Formatted like so: `## HEADER ## ____BULLET # INFO ____BULLET # INFO`. The chunks are `## HEADER ##`, `____BULLET`, and `# INFO`.
 
 
 #### Category
