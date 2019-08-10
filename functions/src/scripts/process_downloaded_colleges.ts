@@ -95,30 +95,41 @@ const timestamp: number = Date.now();
 
 // key = pk
 const events: Map<string, Event> = new Map<string, Event>();
-// pk
-const requiredEvents: string[] = [];
 
 function processEvents(category: string, transfer: boolean, jsonEvents: JsonEvents): void {
     for (const jsonEvent of jsonEvents.events) {
         const name = jsonEvent.name.replace(" [Required]", "");
+        // Don't process what was in family orientation events
         if (familyEvents.has(name))
             continue;
 
-        const start = Date.parse(jsonEvent.start_time);
-        const end = Date.parse(jsonEvent.end_time);
+        // Store all required event pks
+        let firstYearRequired = false;
+        let transferRequired = false;
+        if (name !== jsonEvent.name) {
+            if (!transfer)
+                firstYearRequired = true;
+            else
+                transferRequired = true;
+        }
 
+        // add to categories if event already recorded
         const id = jsonEvent._id;
         const existingEvent = events.get(id);
         if (existingEvent !== undefined) {
             if (!existingEvent.categories.includes(category))
                 existingEvent.categories.push(category);
+            existingEvent.firstYearRequired = existingEvent.firstYearRequired ||
+                firstYearRequired;
+            existingEvent.transferRequired = existingEvent.transferRequired ||
+                transferRequired;
             continue;
         }
 
-        if (name !== jsonEvent.name)
-            requiredEvents.push(id);
-
         const description = jsonEvent.description;
+        const start = Date.parse(jsonEvent.start_time);
+        const end = Date.parse(jsonEvent.end_time);
+
         let location = "";
         if (jsonEvent.place.name !== null) {
             if (jsonEvent.place.room_name !== null &&
@@ -148,9 +159,8 @@ function processEvents(category: string, transfer: boolean, jsonEvents: JsonEven
             start: start,
             end: end,
             categories: [category],
-            transfer: transfer,
-            required: false,
-            categoryRequired: false,
+            firstYearRequired: firstYearRequired,
+            transferRequired: transferRequired,
             timestamp: timestamp
         };
 
@@ -169,24 +179,6 @@ for (const [college, jsonEvents] of Object.entries(transferCollegesToJson)) {
     const collegePk: string = CategoryToPk[college];
     console.log(`Transfer college: ${college}`);
     processEvents(collegePk, true, jsonEvents);
-}
-
-// determine required vs category required
-const numCategories = Object.keys(Colleges).length;
-for (const event of events.values()) {
-    const someoneRequires: boolean = requiredEvents.includes(event.pk);
-
-    if (event.categories.length === numCategories) {
-        event.categories = []; // if everyone tags it, then no one should
-
-        if (someoneRequires) {
-            console.log(`Required: ${event.name}`);
-            event.required = true;
-        }
-    } else if (someoneRequires) {
-        console.log(`Category required: ${event.name}`);
-        event.categoryRequired = true;
-    }
 }
 
 //save to file

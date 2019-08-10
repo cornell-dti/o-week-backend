@@ -10,10 +10,9 @@ interface Event {
     start: number,
     end: number,
     timestamp: number,
-    transfer: boolean,
-    required: boolean,
     categories: string[],
-    categoryRequired: boolean
+    firstYearRequired: boolean,
+    transferRequired: boolean
 }
 
 export {

@@ -89,7 +89,6 @@ Event object returned by the [Version API](#version).
     "longitude":-76.4823330605,
     "start":1566572400000,
     "end":1566583200000,
-    "transfer":false,
     "categories":[  
         "3D56A772-CEE7-2FAC-D320EC9F9BDA6E77",
         "3D5A35CF-9CF4-6F1D-20B4C097C26FFEFF",
@@ -98,8 +97,8 @@ Event object returned by the [Version API](#version).
         "3D71C261-05B8-12D9-978ED31A5A5510B7",
         "BAEFD405-B017-6569-6F8E61533D4F3831"
     ],
-    "required":false,
-    "categoryRequired":false,
+    "firstYearRequired": false,
+    "transferRequired": false,
     "timestamp":1565469385536
 }
 ```
@@ -110,9 +109,9 @@ Event object returned by the [Version API](#version).
 
 **start/end**: The epoch time when this event begins/ends. In EST daylight saving time.
 
-**transfer**: True if the event is for transfer students. Used to distinguish whether the event is required for all students of a college or just transfers of that college.
+**firstYearRequired**: True if the event is required for first year students of colleges in categories.
 
-**categoryRequired**: True if this event is required for students in a college or transfer students (in a college).
+**transferRequired**: True if the event is required for transfer students of colleges in categories.
 
 **additional** (Deprecated): Additional information to display in a special format. Formatted like so: `## HEADER ## ____BULLET # INFO ____BULLET # INFO`. The chunks are `## HEADER ##`, `____BULLET`, and `# INFO`.
 

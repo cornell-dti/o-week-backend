@@ -39,14 +39,15 @@
 
 import familyOrientation from "../../family.json";
 import {Event} from "../models/event";
-import {Category, Colleges, StudentTypes} from "../models/category";
+import {Category, CategoryToPk} from "../models/category";
 import * as util from "util";
 import * as fs from "fs";
 
-const TIMEZONE = " GMT-04:00"; //daylight savings time
+const TIMEZONE = " GMT-04:00"; // daylight savings time
 const timestamp: number = Date.now();
 
 const events: Event[] = [];
+// key = pk
 const categories: Map<String, Category> = new Map<String, Category>();
 
 for (const jsonEvent of familyOrientation.EVENTS) {
@@ -62,10 +63,8 @@ for (const jsonEvent of familyOrientation.EVENTS) {
     const id = jsonEvent.EVENT_ID;
 
     // convert categories
-    let transfer = false;
     let someoneRequires = false;
     const tags: string[] = [];
-    const tagStrings: string[] = [];
     for (const tag of jsonEvent.EVENT_TAGS) {
         const category: Category = {
             pk: tag.TAG_ID,
@@ -74,25 +73,29 @@ for (const jsonEvent of familyOrientation.EVENTS) {
         };
         if (category.category === "Required")
             someoneRequires = true;
-        else if (category.category === StudentTypes.Transfer)
-            transfer = true;
-        categories.set(tag.TAG_LABEL, category);
+        categories.set(tag.TAG_ID, category);
         tags.push(tag.TAG_ID);
-        tagStrings.push(tag.TAG_LABEL);
     }
 
-    let required = false;
-    let categoryRequired = false;
+    let firstYearRequired = false;
+    let transferRequired = false;
     if (someoneRequires) {
-        // categoryRequired if tags include a college or transfer students
-        for (const tag of tagStrings) {
-            if (Object.values(Colleges).includes(tag) || StudentTypes.Transfer === tag) {
-                categoryRequired = true;
+        // collegeRequired if tags include a college or transfer students
+        const collegeRequired = tags.some(tag =>
+            Object.values(CategoryToPk).includes(tag));
+
+        // required for all students; add all categories
+        if (!collegeRequired) {
+            for (const collegePk of Object.values(CategoryToPk)) {
+                if (!tags.includes(collegePk))
+                    tags.push(collegePk);
             }
         }
-        // otherwise required for all
-        if (!categoryRequired)
-            required = true;
+
+        // assume if a family event is required for first years,
+        // then it's also required for transfers
+        firstYearRequired = true;
+        transferRequired = true;
     }
 
     // convert events
@@ -107,7 +110,7 @@ for (const jsonEvent of familyOrientation.EVENTS) {
         const end = new Date(time.TIME_END + TIMEZONE).getTime();
 
         const event: Event = {
-            pk: id + i,
+            pk: id + i, // make unique for each time
             name: title,
             description: description,
             additional: "",
@@ -117,10 +120,9 @@ for (const jsonEvent of familyOrientation.EVENTS) {
             longitude: overriddenLongitude,
             start: start,
             end: end,
-            transfer: transfer,
             categories: tags,
-            required: required,
-            categoryRequired: categoryRequired,
+            firstYearRequired: firstYearRequired,
+            transferRequired: transferRequired,
             timestamp: timestamp
         };
         events.push(event);
