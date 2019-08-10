@@ -45,7 +45,7 @@ import transferHumanEcologyEvents from "../../data/transfer human ecology.json";
 import transferIlrEvents from "../../data/transfer ilr.json";
 import familyOrientation from "../../out.json";
 
-import {CategoryToPk, Colleges} from "../models/category";
+import {CategoryToPk} from "../models/category";
 import {Event} from "../models/event";
 import * as fs from "fs";
 
@@ -58,7 +58,7 @@ interface JsonEvent {
         name: string,
         room_name: string,
         address: string,
-        loc: number[]
+        loc: string[]
     },
     description: string
 }
@@ -99,7 +99,7 @@ function processEvents(category: string, transfer: boolean, jsonEvents: JsonEven
     for (const jsonEvent of jsonEvents.events) {
         const name = jsonEvent.name.replace(" [Required]", "");
         // Don't process what was in family orientation events
-        if (familyEvents.has(name) || familyEvents.has(name.replace("'", "")))
+        if (familyEvents.has(name) || familyEvents.has(name.replace(/[']/g, "")))
             continue;
 
         // Store all required event pks
@@ -142,8 +142,8 @@ function processEvents(category: string, transfer: boolean, jsonEvents: JsonEven
         let latitude: number = 0;
         let longitude: number = 0;
         if (jsonEvent.place.loc !== null) {
-            latitude = jsonEvent.place.loc[0];
-            longitude = jsonEvent.place.loc[1];
+            latitude = parseFloat(jsonEvent.place.loc[0]);
+            longitude = parseFloat(jsonEvent.place.loc[1]);
         }
 
         const event: Event = {
