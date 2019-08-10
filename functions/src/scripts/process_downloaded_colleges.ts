@@ -87,9 +87,8 @@ const transferCollegesToJson: Record<string, JsonEvents> = {
     // missing transfer hotel
 };
 
-// map from name to processed events & categories for comparison
-const familyEvents: Map<string, Event> = new Map(familyOrientation.events
-    .map(event => [event.name, event] as [string, Event]));
+// names
+const familyEvents: Set<string> = new Set(familyOrientation.events.map(event => event.name));
 
 const timestamp: number = Date.now();
 
@@ -100,7 +99,7 @@ function processEvents(category: string, transfer: boolean, jsonEvents: JsonEven
     for (const jsonEvent of jsonEvents.events) {
         const name = jsonEvent.name.replace(" [Required]", "");
         // Don't process what was in family orientation events
-        if (familyEvents.has(name))
+        if (familyEvents.has(name) || familyEvents.has(name.replace("'", "")))
             continue;
 
         // Store all required event pks
@@ -183,3 +182,5 @@ for (const [college, jsonEvents] of Object.entries(transferCollegesToJson)) {
 
 //save to file
 fs.writeFileSync("out_colleges.json", JSON.stringify(Array.from(events.values())));
+// paste the output into lib so it can be used for batch_upload
+fs.copyFileSync("out_colleges.json", "lib/out_colleges.json");

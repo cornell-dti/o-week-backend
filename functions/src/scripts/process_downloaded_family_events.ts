@@ -135,4 +135,5 @@ fs.writeFileSync("out.json", JSON.stringify({
     events: events,
     categories: Array.from(categories.values())
 }));
-
+// paste the output into lib so it can be used for batch_upload
+fs.copyFileSync("out.json", "lib/out.json");
