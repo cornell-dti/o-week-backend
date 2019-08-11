@@ -130,7 +130,7 @@ Category object returned by the [Version API](#version).
 **pk**: The private key, a unique identifier of the category.
 
 ### Resources
-[https://us-east1-oweek-1496849141291.cloudfunctions.net/getResources]()
+[https://us-east1-oweek-1496849141291.cloudfunctions.net/getResources](https://us-east1-oweek-1496849141291.cloudfunctions.net/getResources)
 
 The resources to display in the Settings page.
 
@@ -143,14 +143,6 @@ The resources to display in the Settings page.
     }
 ]
 ```
-
-### Images (DEPRECATED)
-[https://oweekapp.herokuapp.com/flow/event/<event_pk>/image](https://oweekapp.herokuapp.com/flow/event/117/image)
-
-The image of an event.
-
-#### Parameters
-Replace <event_pk> with the **pk** of the event. The above link may be broken if the event no longer exists or the image has been deleted.
 
 
 ## Contributors
