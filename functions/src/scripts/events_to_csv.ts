@@ -3,7 +3,7 @@ import familyEvents from "../../out.json";
 import collegeEvents from "../../out_colleges.json";
 import * as fs from "fs";
 
-function noComma(str: string): string {
+export function noComma(str: string): string {
     return str.replace(/[,]/g, ";");
 }
 

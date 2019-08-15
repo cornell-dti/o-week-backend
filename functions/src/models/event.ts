@@ -3,6 +3,7 @@ interface Event {
     name: string,
     description: string,
     url: string,
+    img: string,
     additional: string,
     location: string,
     longitude: number,

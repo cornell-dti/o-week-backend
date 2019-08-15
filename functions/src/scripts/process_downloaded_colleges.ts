@@ -97,7 +97,8 @@ const events: Map<string, Event> = new Map<string, Event>();
 
 function processEvents(category: string, transfer: boolean, jsonEvents: JsonEvents): void {
     for (const jsonEvent of jsonEvents.events) {
-        const name = jsonEvent.name.replace(" [Required]", "");
+        const name = jsonEvent.name.replace(" [Required]", "")
+            .trim();
         // Don't process what was in family orientation events
         if (familyEvents.has(name) || familyEvents.has(name.replace(/[']/g, "")))
             continue;
@@ -105,7 +106,7 @@ function processEvents(category: string, transfer: boolean, jsonEvents: JsonEven
         // Store all required event pks
         let firstYearRequired = false;
         let transferRequired = false;
-        if (name !== jsonEvent.name) {
+        if (name !== jsonEvent.name.trim()) {
             if (!transfer)
                 firstYearRequired = true;
             else
@@ -152,6 +153,7 @@ function processEvents(category: string, transfer: boolean, jsonEvents: JsonEven
             description: description,
             additional: "",
             url: "",
+            img: "",
             location: location,
             latitude: latitude,
             longitude: longitude,

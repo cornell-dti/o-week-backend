@@ -84,6 +84,7 @@ Event object returned by the [Version API](#version).
     "description":"The John Henrik Clarke Africana Library provides a special collection focusing on the history and culture of people of African ancestry. The library supports the curriculum of Cornell University’s Africana Studies and Research Center and the Cornell community at large. The library was named in honor of Dr. John Henrik Clarke during the summer of 1985. As a distinguished historian, Dr. Clarke taught courses in Black history at Cornell and was instrumental in establishing the Africana Center’s curriculum in the 1970s. The fall of 2019 marks the 50th anniversary of the founding of Africana. Come and take a tour of the library and the center, and see salient works from our collection.",
     "additional":"",
     "url":"https://africana.library.cornell.edu/",
+    "img": "https://images.localist.com/photos/16498/original/7ef9231932f3e8ccaf23dd3f5ae0be4e4984114a.jpg",
     "location":"Africana Studies and Research Center, 310 Triphammer Road",
     "latitude":42.4574290881,
     "longitude":-76.4823330605,

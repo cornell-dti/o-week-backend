@@ -52,7 +52,8 @@ const categories: Map<String, Category> = new Map<String, Category>();
 
 for (const jsonEvent of familyOrientation.EVENTS) {
     const title = jsonEvent.EVENT_TITLE.replace(" [Required]", "")
-        .replace(/[‘’]/g,''); // remove smart quotes
+        .replace(/[‘’]/g,'') // remove smart quotes
+        .trim();
     const description = jsonEvent.EVENT_DESCRIPTION;
     const location = jsonEvent.EVENT_LOCATION;
     const latitude: number = util.isNumber(jsonEvent.EVENT_LOCATION_LAT)
@@ -115,6 +116,7 @@ for (const jsonEvent of familyOrientation.EVENTS) {
             description: description,
             additional: "",
             url: url,
+            img: "",
             location: overriddenLocation,
             latitude: overriddenLatitude,
             longitude: overriddenLongitude,
