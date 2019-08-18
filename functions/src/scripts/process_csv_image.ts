@@ -9,14 +9,15 @@ const lines: string[] = data.split("\r\n");
 for (const line of lines) {
     const parts: string[] = line.split(",");
     const name = parts[0];
+    const location = parts[2];
     const img = parts[6];
-    console.log(`Event ${name} has image ${img}`);
+    console.log(`Event ${name} at location ${location} has image ${img}`);
 
     for (const event of familyEvents.events)
-        if (noComma(event.name) === name)
+        if (noComma(event.location) === location)
             event.img = img;
     for (const event of collegeEvents)
-        if (noComma(event.name) === name)
+        if (noComma(event.location) === location)
             event.img = img;
 }
 
@@ -25,3 +26,5 @@ fs.writeFileSync("out.json", JSON.stringify({
     categories: familyEvents.categories
 }));
 fs.writeFileSync("out_colleges.json", JSON.stringify(collegeEvents));
+fs.copyFileSync("out.json", "lib/out.json");
+fs.copyFileSync("out_colleges.json", "lib/out_colleges.json");
